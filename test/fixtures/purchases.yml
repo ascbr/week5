@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  purchase_date: 2019-03-06 12:31:19
+  total: 9.99
+  user: one
+
+two:
+  purchase_date: 2019-03-06 12:31:19
+  total: 9.99
+  user: two

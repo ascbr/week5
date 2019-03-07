@@ -1,0 +1,41 @@
+
+<h1>Product List</h1>
+<% if flash[:alert] %>
+  <div class="alert alert-<%= flash[:alert_type] %>" role="alert">
+  <%= flash[:alert] %>
+</div>
+<% end %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+  Products
+  </div>  
+  <div class="panel-body">
+    <table class="table table-hover">
+    <thead>
+        
+        <th>Name</th>
+        <th>Category</th>
+        <th>Stock</th>
+        <th>Price</th>
+        <th>Options</th>
+    </thead>
+    <tbody>
+      <% @products_list.each_with_index do |p, index| %>
+        <tr>
+            
+            <td><%= p.name %>
+             <br/><div class="small text-muted">SKU: <%= p.sku%></div>   
+            </td> 
+            <td><%= p.category.name %></td> 
+            <td><%= p.stock %></td> 
+            <td>$ <%= p.price.round(2) %></td> 
+            <td><a href="/products/show?id_product=<%=p.id%>" class="btn btn-success">Buy!<td>
+        </tr>  
+      <%end%>
+      </tbody>
+    </table>
+    </div>
+    <div class="panel-footer">
+     <%== pagy_bootstrap_nav(@pagy) %>
+    </div>
+</div>
