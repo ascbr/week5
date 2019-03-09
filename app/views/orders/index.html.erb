@@ -1,6 +1,12 @@
 
 <br/>
 <h1>Shopping Kart</h1>
+<% if flash[:alert] %>
+  <div class="alert alert-<%= flash[:alert_type] %>" role="alert">
+  <%= flash[:alert] %>
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+</div>
+<% end %>
 <div class="panel panel-default">
     
     <div class="panel-body">
@@ -62,8 +68,8 @@
       <%else%>
         
          <div class="alert alert-warning" role="alert">
-          <h3>No products Added, Return to navigate.</h3>
-          <a href="/products" class="btn btn-link btn-lg">Products</a>
+          <h3><%=@alert%></h3>
+          <a href="/products" class="btn btn-primary btn-lg">Go to Products</a>
            
           </div>          
         

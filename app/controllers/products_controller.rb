@@ -12,7 +12,7 @@ class ProductsController < ApplicationController
       @list = Product.where(['name ILIKE ? and category_id = ?', "%#{params[:search_txt]}%", params[:category]])
                 .order(params[:order_by])
     else
-      @list = Product.all.order(params[:order_by])
+      @list = Product.all.order("name ASC")
     end
     @pagy, @products_list = pagy(@list, items: 8)
   end
