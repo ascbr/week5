@@ -29,7 +29,7 @@ class ProductsController < ApplicationController
   end
   
   def search
-      puts("-====================================================")
+    @pagy, @products_list = pagy(Product.all.order("name ASC"),items: 8)
   end
 
   def find_user
