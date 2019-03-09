@@ -38,8 +38,18 @@
             <h2>
               $ <%= p.price.round(2) %>
             </h2>
-            <a href="/products/show?id_product=<%=p.id%>" class="btn btn-primary">view</a>
-             Likes: <%= p.likes_count.nil? ? 0 :  p.likes_count   %>
+            
+
+            <%= form_with model: @like, method: "post", class: "form-inline" do |form| %>
+              <a href="/products/show?id_product=<%=p.id%>" class="btn btn-primary">view</a>
+              <%= form.hidden_field :product, value: p.id %> 
+              <%= form.hidden_field :user, value: @user.id %> 
+              <button type="submit" class="btn btn-default" >:)</button>
+              
+            <% end %>
+             <div id="likes-div">
+              <%= render partial: 'likes', locals: {product: p} %>
+             </div>
           </div>
         </div>
         </div>  

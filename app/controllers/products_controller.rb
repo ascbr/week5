@@ -5,9 +5,10 @@ class ProductsController < ApplicationController
   
   def index
     find_user
+    @like = Like.new 
 
     if params[:search_txt].present?
-      puts "----------------------------"
+      
       @list = Product.where(['name ILIKE ?', "%#{params[:search_txt]}%"]).order("name ASC")
     else
       @list = Product.all.order("name ASC")
