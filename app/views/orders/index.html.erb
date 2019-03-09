@@ -51,8 +51,10 @@
         <div>
           <%= form_for @purchase, url: purchase_orders_path,  method: :post do |f| %>
             <%= f.hidden_field :purchase_id, value: @purchase.id %>  
-            <%= f.hidden_field :total, value: sum_total %>   
-            <%= f.submit "Purchase", class:"btn btn-success btn-lg"%>
+            <%= f.hidden_field :total, value: sum_total %>
+            <% if user_signed_in? %>   
+              <%= f.submit "Purchase", class:"btn btn-success btn-lg"%>
+            <%end%>
           <%end%>
             
         </div>

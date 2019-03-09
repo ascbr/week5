@@ -1,9 +1,9 @@
 class LikesController < ApplicationController
     
     def create
-        puts "----------------------------"
+        
         like = Like.where(["user_id = ? and product_id = ?", params[:like][:user], params[:like][:product]]).first
-        puts "Like: ---->#{like}"
+       
         if like.nil? 
             like = Like.new
             like.product = Product.find(params[:like][:product])
