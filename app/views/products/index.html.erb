@@ -1,0 +1,67 @@
+
+<h1>Product List</h1>
+<% if flash[:alert] %>
+  <div class="alert alert-<%= flash[:alert_type] %>" role="alert">
+  <%= flash[:alert] %>
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+</div>
+<% end %>
+<div class="panel panel-success">
+  <div class="panel-body">
+
+    <%= form_with method: "get", local: true, class: "form-inline" do |form| %>
+
+      <%= form.collection_select(:category, @categories, :id, :name, { prompt: "--Select category--" }, { class: "form-control", required: true }) %>
+      <%= form.select :order_by, [["Name","name ASC"], ["Most liked","likes_count ASC"]], { prompt: "--Select order by--" }, { class: "form-control", required: true } %>
+      <%= form.text_field :search_txt, class:"form-control", required: "required" %>
+      <input type="submit" class="btn btn-default" value="Search"/>
+      <%= link_to products_path do %>
+        All products
+      <% end  %>
+    <% end %>
+
+  </div>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+  Products
+  </div>  
+  <div class="panel-body">
+    
+      <% @products_list.each_with_index do |p, index| %>
+      <div>
+        <div class="panel panel-default col-md-6">
+          <div class="panel-body">
+            <h3>
+              <%= p.name %>
+             <br/><div class="small text-muted">SKU: <%= p.sku%>
+             <br>Category: <%= p.category.name %></div>
+            </h3>
+            <h2>
+              $ <%= p.price.round(2) %>
+            </h2>
+            
+            
+              <%= form_with model: @like, method: "post", class: "form-inline" do |form| %>
+                <a href="/products/show?id_product=<%=p.id%>" class="btn btn-primary">view</a>
+                <%= form.hidden_field :product, value: p.id %> 
+                <%= form.hidden_field :user, value: @user.id %> 
+                <% if user_signed_in? %>
+                  <button type="submit" class="btn btn-default" >:)</button>
+                <% end %>    
+              <% end %>
+            
+             <div id="likes-div">
+              <%= render partial: 'likes', locals: {product: p} %>
+             </div>
+          </div>
+        </div>
+        </div>  
+      <%end%>
+    
+    </div>
+    <div class="panel-footer">
+     <%== pagy_bootstrap_nav(@pagy) %>
+    </div>
+</div>
