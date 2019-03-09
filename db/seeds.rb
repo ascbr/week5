@@ -10,6 +10,12 @@ require 'securerandom'
 
 Role.create(name: :admin)
 Role.create(name: :client)
+user3 = User.create(username: 'Adilio',
+	email: 'adilio.scbr@gmail.com',
+	password: '123456',
+	password_confirmation: '123456')
+user3.add_role(:admin)
+
 user1 = User.create(username: 'Nicole',
 								    email: 'admin@gmail.com',
 								    password: 'password1234',
