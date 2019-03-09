@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :products
+  resources :products do
+    collection do
+      post 'search' 
+    end
+  end
+
   resources :orders do
     collection do
       post 'purchase'

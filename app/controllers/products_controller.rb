@@ -5,7 +5,7 @@ class ProductsController < ApplicationController
   
   def index
     find_user
-    @pagy, @products_list = pagy(Product.all.order("name ASC"))
+    @pagy, @products_list = pagy(Product.all.order("name ASC"),items: 8)
     
   end
 
@@ -26,6 +26,10 @@ class ProductsController < ApplicationController
       
     end
 
+  end
+  
+  def search
+      puts("-====================================================")
   end
 
   def find_user
