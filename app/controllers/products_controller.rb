@@ -5,8 +5,14 @@ class ProductsController < ApplicationController
   
   def index
     find_user
-    @pagy, @products_list = pagy(Product.all.order("name ASC"),items: 8)
-    
+
+    if params[:search_txt].present?
+      puts "----------------------------"
+      @list = Product.where(['name ILIKE ?', "%#{params[:search_txt]}%"]).order("name ASC")
+    else
+      @list = Product.all.order("name ASC")
+    end
+    @pagy, @products_list = pagy(@list,items: 8)
   end
 
   def show 
@@ -28,9 +34,7 @@ class ProductsController < ApplicationController
 
   end
   
-  def search
-    @pagy, @products_list = pagy(Product.all.order("name ASC"),items: 8)
-  end
+  
 
   def find_user
     if current_user
