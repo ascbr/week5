@@ -1,0 +1,4 @@
+(function(){
+  const el = document.querySelector('#likes-div')
+  el.innerHTML = '<%= escape_javascript(render partial: 'likes', locals: {product: p}) %>'
+})()

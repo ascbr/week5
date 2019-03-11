@@ -1,0 +1,36 @@
+<br/>
+<h1>Buy a product.</h1>
+<div class="panel panel-primary">
+    <div class="panel-body">
+      <div class="row">
+        <div>
+          <div class="col-md-6">
+            <img src="#" height="300" width="300"> 
+            <h2>
+              <%=@product.name%><br/>
+              <small>SKU: <%=@product.sku%><br/>
+                    Category: <%= @product.category.name%>
+              </small><br/>
+              
+            </h2>
+            
+            <h1>$ <%= @product.price.round(2) %></h1>
+          </div>
+          
+        </div>
+        <div class="col-md-6">
+          <h3>Products available: <%=@product.stock%></h3>
+          <%= form_for(Order.new) do |f| %>
+            <div class="form-group">
+              <%= label_tag(:quantity, "Amount to buy:") %>
+              <%= f.number_field :quantity, in: 0..@product.stock, step: 1, required: 'required' %>
+              <%= f.hidden_field :product_id, value: @product.id %> 
+              <%= f.hidden_field :purchase_id, value: @purchase.id %>            
+              <%= f.submit "Add to cart", class:"btn btn-success"%>
+              
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+</div>

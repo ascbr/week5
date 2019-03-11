@@ -1,0 +1,79 @@
+
+<br/>
+<h1>Shopping Kart</h1>
+<% if flash[:alert] %>
+  <div class="alert alert-<%= flash[:alert_type] %>" role="alert">
+  <%= flash[:alert] %>
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+</div>
+<% end %>
+<div class="panel panel-default">
+    
+    <div class="panel-body">
+    <% if @purchase %>
+      <h4>
+        Purchase id: <%=@purchase.id%><br/>
+        User: <%=@user.username%>
+      <h4>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Product Details</th>
+            <th>Price</th>
+            <th>Units</th>
+            <th>Total/product</th>
+          </tr>
+        </thead>
+        <% sum_total = 0%>
+        <%@orders.each do |o| %>
+            <tr>
+                <td>
+                   <h3>
+                     <%= o.product.name %>          
+                   </h3>
+                   <div class='text-muted'> 
+                      Category: <%= o.product.category.name %> <br/>
+                      SKU: <%= o.product.sku %> 
+                       
+                   </div>
+                </td>
+                <td>
+                  $ <%=o.product.price.round(2)%>
+                </td>
+                <td>
+                  <%=o.quantity%>
+                </td>
+                <td>
+                  $ <%=o.product.price.round(2) * o.quantity%>
+                    <%sum_total += o.product.price.round(2) * o.quantity%>
+                </td>
+            </tr>
+        <% end %>
+      </table>
+      <div class='panel panel-danger'>
+        <div class='text-right panel-body'>
+           <h1> Total: $ <%=sum_total.round(2)%></h1>
+        <div>
+        <div>
+          <%= form_for @purchase, url: purchase_orders_path,  method: :post do |f| %>
+            <%= f.hidden_field :purchase_id, value: @purchase.id %>  
+            <%= f.hidden_field :total, value: sum_total %>
+            <% if user_signed_in? %>   
+              <%= f.submit "Purchase", class:"btn btn-success btn-lg"%>
+            <%end%>
+          <%end%>
+            
+        </div>
+      </div>
+      <%else%>
+        
+         <div class="alert alert-warning" role="alert">
+          <h3><%=@alert%></h3>
+          <a href="/products" class="btn btn-primary btn-lg">Go to Products</a>
+           
+          </div>          
+        
+      <%end%>
+    </div>
+    
+</div> 

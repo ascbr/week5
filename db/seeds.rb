@@ -5,6 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require 'faker'
+require 'securerandom'
 
 Role.create(name: :admin)
 Role.create(name: :client)
@@ -18,3 +20,18 @@ user2 = User.create(username: 'Bruce',
 								    password: 'password1234',
 								    password_confirmation: 'password1234')
 user2.add_role(:client)
+
+cat = []
+10.times do |i| 
+	cat[i] = Category.create(name: Faker::Games::Pokemon.name)  
+end
+
+products = []
+random_num = Random.new
+50.times do |i|
+	products[i] = Product.create( name: Faker::Food.fruits,
+								  price: random_num.rand(0.35..5.75),
+								  category: cat[random_num.rand(0..9)],
+								  stock: random_num.rand(50..200),
+								  sku: SecureRandom.uuid)
+end
