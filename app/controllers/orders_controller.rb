@@ -1,13 +1,20 @@
 class OrdersController < ApplicationController
 
   def create
-    order = Order.new
-    order.purchase = Purchase.find(params[:order][:purchase_id])
-    order.product = Product.find(params[:order][:product_id])
-    order.quantity = params[:order][:quantity]
-    order.save
+    
+    purchase = Purchase.find(params[:order][:purchase_id])
+    order = purchase.orders.find_by(product_id: order_params[:product_id])
+    if order
+        order.quantity += params[:order][:quantity].to_i
+    else
+      order = Order.new
+      order.product = Product.find(params[:order][:product_id])
+      order.quantity = params[:order][:quantity].to_i
+      order.purchase = purchase
+    end
+      order.save
     #order.create(params[:order])
-    redirect_to products_path, flash: { alert: "Added to car.", alert_type: 'success' }
+    redirect_to orders_path, flash: { alert: "Added to car.", alert_type: 'success' }
   end
 
   def index

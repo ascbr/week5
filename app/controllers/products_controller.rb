@@ -18,10 +18,10 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @id = params[:id_product]
+    @id = params[:id]
     @product = Product.find(@id)
 
-    @purchase = Purchase.where(['user_id = ? and state = ?', @user.id, 'in progress']).first
+    @purchase = Purchase.where(['user_id = ? and state = ?', current_user.id, 'in progress']).first
 
     unless @purchase
       @purchase = Purchase.new
