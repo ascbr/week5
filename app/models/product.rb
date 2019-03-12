@@ -6,4 +6,6 @@ class Product < ApplicationRecord
   has_many :tags, through: :product_tags
   has_many :likes
   has_many :users, through: :likes
+  validates :sku, uniqueness: true
+  validates :name, uniqueness: true
 end

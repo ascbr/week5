@@ -4,21 +4,26 @@ class ProductsController < ApplicationController
   
   
   def index
-    find_user
-    @like = Like.new
-    @categories = Category.all
+    
+    @search = OpenStruct.new(
+      params.fetch(:search, {})
+    )
 
-    if params[:search_txt].present?
-      @list = Product.where(['name ILIKE ? and category_id = ?', "%#{params[:search_txt]}%", params[:category]])
-                .order(params[:order_by])
+    @like = Like.new
+    @categories = Category.all.order(name: :ASC)
+    @list = 
+    if params[:search].present? && params[:search][:search_txt]
+      Product.where(['name ILIKE ?', "%#{params[:search][:search_txt]}%"])
+    elsif params[:search].present? && params[:search][:category]
+      Product.where(['category_id = ?', "#{params[:search][:category]}"])
     else
-      @list = Product.all.order("name ASC")
+      Product.all.order(name: :ASC)
     end
     @pagy, @products_list = pagy(@list, items: 8)
   end
 
   def show 
-    find_user
+    
     @id = params[:id_product]
     @product = Product.find(@id)
     
@@ -36,16 +41,5 @@ class ProductsController < ApplicationController
 
   end
   
-  
-
-  def find_user
-    if current_user
-      @user = User.find(current_user.id)
-    else
-      @user = User.new
-      @user.username = 'Anonymous'
-    end
-      @user
-  end
  
 end
