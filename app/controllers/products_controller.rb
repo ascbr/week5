@@ -7,28 +7,13 @@ class ProductsController < ApplicationController
 
     @like = Like.new
     @categories = Category.all.order(name: :ASC)
-    @list =
-      if params[:search].present? && params[:search][:search_txt] && params[:search][:category] == ''  
-        Product.where(['name ILIKE ?', "%#{params[:search][:search_txt]}%"])
-      elsif params[:search].present? && params[:search][:category]
-        Product.where(['category_id = ?', params[:search][:category]])
-      elsif params[:search].present? && params[:search][:order_by]
-        Product.all.order(params[:search][:order_by])
-      elsif params[:search].present? && params[:search][:search_txt] && params[:search][:category]
-        Product.where(['name ILIKE ? and category_id =?',
-                       "%#{params[:search][:search_txt]}%",
-                       params[:search][:category]])
-      elsif params[:search].present? && params[:search][:search_txt] && params[:search][:order_by]
-        Product.where(['name ILIKE ?', "%#{params[:search][:search_txt]}%"]).order(params[:search][:order_by])
-      elsif params[:search].present? && params[:search][:category] && params[:search][:order_by]
-        Product.where(['category_id = ?', params[:search][:category]]).order(params[:search][:order_by])
-      elsif params[:search].present? && params[:search][:search_txt] && params[:search][:order_by] && params[:search][:category]
-        Product.where(['name ILIKE ? and category_id =?',
-          "%#{params[:search][:search_txt]}%",
-          params[:search][:category]]).order(params[:search][:order_by])
-      else
-        Product.all.order(name: :ASC)
-      end
+    if params[:search].present?
+      @list = Product.all.order(params[:search][:order_by])
+    else
+      @list = Product.all.order(name: :ASC)
+    end
+    @list = @list.where('name ILIKE ?', "%#{params[:search][:search_txt]}%") if params[:search].present?
+    @list = @list.where('category_id = ?', params[:search][:category_id]) if params[:search].present? and params[:search][:category_id] != '0'
     @pagy, @products_list = pagy(@list, items: 8)
   end
 
@@ -40,7 +25,7 @@ class ProductsController < ApplicationController
 
     unless @purchase
       @purchase = Purchase.new
-      @purchase.user = @user
+      @purchase.user = current_user
       @purchase.state = 'in progress'
       @purchase.total = 0.0
       @purchase.purchase_date = Time.now
