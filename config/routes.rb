@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  
+  #REST API
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :products
+    end
+  end
+
+  #MVC 
   resources :likes
 
   resources :products do
@@ -14,5 +23,5 @@ Rails.application.routes.draw do
     end
   end
   devise_for :users
-   root 'products#index'
+  root 'products#index'
 end
