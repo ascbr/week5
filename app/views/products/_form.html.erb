@@ -1,8 +1,15 @@
 
 
 
-<%= form_with model: product  do |form| %>
+<%= form_with model: product, local: true  do |form| %>
+
 <div class="col-md-8">
+<div class="form-group raw">
+   <label for="product_image" class="col-md-2">Image:</label>
+  <div class="col-md-8">
+  <%= form.file_field :image%>
+  </div>
+</div><br/>
 <div class="form-group raw">
    <label for="product_name" class="col-md-2">Name:</label>
   <div class="col-md-8">
@@ -10,19 +17,19 @@
   </div>
 </div><br/>
 <div class="form-group raw">
-   <label for="product_name" class="col-md-2">Stock:</label>
+   <label for="product_stock" class="col-md-2">Stock:</label>
   <div class="col-md-8">
   <%= form.text_field :stock, class: "form-control "%>
   </div>
 </div><br/>
 <div class="form-group raw">
-   <label for="product_name" class="col-md-2">Price:</label>
+   <label for="product_price" class="col-md-2">Price:</label>
   <div class="col-md-8">
   <%= form.text_field :price, class: "form-control "%>
   </div><br/>
 </div>
 <div class="form-group raw">
-   <label for="product_name" class="col-md-2">Price:</label>
+   <label for="product_category_id" class="col-md-2">Category:</label>
   <div class="col-md-8">
   <%= form.select :category_id, @categories.collect {|p| [ p.name, p.id ] }, { }, {class: "form-control"} %>
   </div>

@@ -1,3 +1,5 @@
+require 'securerandom'
+
 # frozen_string_literal: true
 class ProductsController < ApplicationController
   def index
@@ -5,6 +7,7 @@ class ProductsController < ApplicationController
       params.fetch(:search, {})
     )
 
+    @user = current_user    
     @like = Like.new
     @categories = Category.all.order(name: :ASC)
     if params[:search].present?
@@ -38,11 +41,34 @@ class ProductsController < ApplicationController
     @product = Product.new
     @categories = Category.all.order(:name)
   end
-  
+
+  def create
+    product = Product.new(product_params)
+    product.sku = SecureRandom.uuid
+    product.save
+    redirect_to products_path, flash: { alert: "New product created: #{product.name}", 
+                                        alert_type: 'success' } and return
+  end
+
+  def edit
+    @product = Product.find(params[:id])
+    @categories = Category.all.order(:name)
+  end
+
+  def update
+    product = Product.find(params[:id])
+    product.update!(product_params)
+    redirect_to product_path(params[:id])
+  end
+
+  def destroy
+    product = Product.find(params[:id])
+    product.destroy
+    redirect_to products_path
+  end
+
   private
-  
   def product_params
-
-  end 
-
+    params.require(:product).permit(:name, :stock, :price, :category_id, :image)
+  end
 end
