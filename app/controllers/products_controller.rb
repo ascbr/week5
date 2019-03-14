@@ -33,4 +33,16 @@ class ProductsController < ApplicationController
 
     end
   end
+
+  def new
+    @product = Product.new
+    @categories = Category.all.order(:name)
+  end
+  
+  private
+  
+  def product_params
+
+  end 
+
 end

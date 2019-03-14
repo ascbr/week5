@@ -11,9 +11,9 @@ require 'securerandom'
 Role.create(name: :admin)
 Role.create(name: :client)
 user3 = User.create(username: 'Adilio',
-	email: 'adilio.scbr@gmail.com',
-	password: '123456',
-	password_confirmation: '123456')
+									email: 'adilio.scbr@gmail.com',
+									password: '123456',
+									password_confirmation: '123456')
 user3.add_role(:admin)
 
 user1 = User.create(username: 'Nicole',
@@ -29,7 +29,7 @@ user2.add_role(:client)
 
 cat = []
 10.times do |i| 
-	cat[i] = Category.create(name: Faker::Games::Pokemon.name)  
+	cat[i] = Category.create(name: Faker::Games::Pokemon.name)
 end
 
 products = []

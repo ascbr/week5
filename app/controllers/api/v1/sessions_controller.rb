@@ -4,10 +4,8 @@ module API
       skip_before_action :verify_authenticity_token
       respond_to :json
       KEY = Rails.application.secrets.secret_key_base.to_s
-      
       def create
         @user = User.find_by(email: params[:email])
-        
         if @user.nil?
           render json: {message: 'user not found'}, status: :unathorized
         elsif @user.valid_password?(params[:password])
@@ -36,9 +34,7 @@ module API
         rescue
           render json: { info: 'user not found' }, status: :not_found
         end
-        
       end
-
     end
   end
 end
