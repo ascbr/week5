@@ -48,6 +48,11 @@ class OrdersController < ApplicationController
         product = o.product
         product.stock -= o.quantity
         product.save
+
+        if product.stock <= 3
+          SendNotificationsJob.perform_later(product)
+        end
+
       end
       redirect_to products_path, flash: { alert: "Purchase #{@purchase_id} . total: #{@purchase_total}", alert_type: 'warning' } and return
     else 
