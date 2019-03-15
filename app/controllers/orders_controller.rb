@@ -1,25 +1,26 @@
 class OrdersController < ApplicationController
 
   def create
-    
-    purchase = Purchase.find(params[:order][:purchase_id])
-    order = purchase.orders.find_by(product_id: order_params[:product_id])
-    if order
-        order.quantity += params[:order][:quantity].to_i
+    if current_user
+      purchase = Purchase.find(params[:order][:purchase_id])
+      order = purchase.orders.find_by(product_id: order_params[:product_id])
+      if order
+          order.quantity += params[:order][:quantity].to_i
+      else
+        order = Order.new
+        order.product = Product.find(params[:order][:product_id])
+        order.quantity = params[:order][:quantity].to_i
+        order.purchase = purchase
+      end
+        order.save
+      #order.create(params[:order])
+      redirect_to orders_path, flash: { alert: "Added to car.", alert_type: 'success' }
     else
-      order = Order.new
-      order.product = Product.find(params[:order][:product_id])
-      order.quantity = params[:order][:quantity].to_i
-      order.purchase = purchase
+      redirect_to orders_path, flash: { alert: "Please log in", alert_type: 'warning' }
     end
-      order.save
-    #order.create(params[:order])
-    redirect_to orders_path, flash: { alert: "Added to car.", alert_type: 'success' }
   end
 
   def index
-
-    
     @user = current_user
     if @user
       @purchase = Purchase.where(["user_id = ? and state = ?", @user.id, "in progress"]).first
