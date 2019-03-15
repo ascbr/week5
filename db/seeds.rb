@@ -39,5 +39,6 @@ random_num = Random.new
 								  price: random_num.rand(0.35..5.75),
 								  category: cat[random_num.rand(0..9)],
 								  stock: random_num.rand(50..200),
-								  sku: SecureRandom.uuid)
+								  sku: SecureRandom.uuid, 
+								  status: 1)
 end

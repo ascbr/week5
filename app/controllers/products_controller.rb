@@ -7,13 +7,13 @@ class ProductsController < ApplicationController
       params.fetch(:search, {})
     )
 
-    @user = current_user    
+    @user = current_user
     @like = Like.new
     @categories = Category.all.order(name: :ASC)
     if params[:search].present?
-      @list = Product.all.order(params[:search][:order_by])
+      @list = Product.where(status: 1).order(params[:search][:order_by])
     else
-      @list = Product.all.order(name: :ASC)
+      @list = Product.where(status: 1).order(name: :ASC)
     end
     @list = @list.where('name ILIKE ?', "%#{params[:search][:search_txt]}%") if params[:search].present?
     @list = @list.where('category_id = ?', params[:search][:category_id]) if params[:search].present? and params[:search][:category_id] != '0'
@@ -23,8 +23,9 @@ class ProductsController < ApplicationController
   def show
     @id = params[:id]
     @product = Product.find(@id)
-
-    @purchase = Purchase.where(['user_id = ? and state = ?', current_user.id, 'in progress']).first
+    if current_user
+      @purchase = Purchase.where(['user_id = ? and state = ?', current_user.id, 'in progress']).first
+    end
 
     unless @purchase
       @purchase = Purchase.new
@@ -38,21 +39,31 @@ class ProductsController < ApplicationController
   end
 
   def new
-    @product = Product.new
-    @categories = Category.all.order(:name)
+    if current_user && current_user.has_role?(:admin)
+      @product = Product.new
+      @categories = Category.all.order(:name)
+    else 
+      redirect_to products_path, flash: { alert: "Access denied", 
+                                        alert_type: 'info' } and return
+    end
   end
 
   def create
     product = Product.new(product_params)
     product.sku = SecureRandom.uuid
     product.save
-    redirect_to products_path, flash: { alert: "New product created: #{product.name}", 
+    redirect_to product_path(Product.last), flash: { alert: "New product created: #{product.name}", 
                                         alert_type: 'success' } and return
   end
 
   def edit
-    @product = Product.find(params[:id])
-    @categories = Category.all.order(:name)
+    if current_user && current_user.has_role?(:admin)
+      @product = Product.find(params[:id])
+      @categories = Category.all.order(:name)
+    else 
+      redirect_to products_path, flash: { alert: "Access denied", 
+                                        alert_type: 'info' } and return
+    end
   end
 
   def update
@@ -62,9 +73,16 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    product = Product.find(params[:id])
-    product.destroy
-    redirect_to products_path
+    if current_user && current_user.has_role?(:admin)
+      product = Product.find(params[:id])
+      product.status = 0
+      product.save
+      redirect_to products_path
+    else
+      redirect_to products_path, flash: { alert: "Access denied", 
+                                        alert_type: 'info' } and return
+    end
+
   end
 
   private

@@ -18,6 +18,8 @@ class OrdersController < ApplicationController
   end
 
   def index
+
+    
     @user = current_user
     if @user
       @purchase = Purchase.where(["user_id = ? and state = ?", @user.id, "in progress"]).first
@@ -48,8 +50,10 @@ class OrdersController < ApplicationController
         product = o.product
         product.stock -= o.quantity
         product.save
+        
+        
 
-        if product.stock <= 3
+        if product.stock <= 3 && product.likes.size > 0
           SendNotificationsJob.perform_later(product)
         end
 
