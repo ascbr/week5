@@ -11,7 +11,9 @@ class Product < ApplicationRecord
 
   has_one_attached :image
   def thumb
-   return self.image.variant(resize: '220x220')
-  
+    
+      return self.image.variant(resize: '220x220!')  
+    
+    
   end
 end

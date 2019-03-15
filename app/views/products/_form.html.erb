@@ -2,12 +2,19 @@
 
 
 <%= form_with model: product, local: true  do |form| %>
-
+<% if @product.image.attached?%>
+              <%= image_tag(@product.thumb) %>
+              
+            <%else%>
+              <%= image_tag 'not_found.jpg',  height: '220', width: '220'%>
+            <%end%>
 <div class="col-md-8">
 <div class="form-group raw">
+
    <label for="product_image" class="col-md-2">Image:</label>
   <div class="col-md-8">
-  <%= form.file_field :image%>
+  
+  <%= form.file_field :image, accept: 'image/png,image/gif,image/jpeg'%>
   </div>
 </div><br/>
 <div class="form-group raw">

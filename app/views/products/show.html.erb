@@ -5,7 +5,12 @@
       <div class="row">
         <div>
           <div class="col-md-6">
-            <%= image_tag(@product.thumb) %>
+            <% if @product.image.attached?%>
+              <%= image_tag(@product.thumb) %>
+              
+            <%else%>
+              <%= image_tag 'not_found.jpg',  height: '220', width: '220'%>
+            <%end%>
             <h2>
               <%=@product.name%><br/>
               <small>SKU: <%=@product.sku%><br/>

@@ -39,7 +39,14 @@
       <div>
         <div class="panel panel-default col-md-6">
           <div class="panel-body">
-            <%= image_tag(p.thumb) %>
+            <% if p.image.attached?%>
+              <%= image_tag(p.thumb) %>
+              
+            <%else%>
+              <%= image_tag 'not_found.jpg', height: '220', width: '220'%>
+            <%end%>
+
+            
             <h3>
               <%= p.name %>
              <br/><div class="small text-muted">SKU: <%= p.sku%>
