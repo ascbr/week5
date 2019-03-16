@@ -12,17 +12,35 @@
   <div class="panel-body">
 
     <%= form_for @search, url: products_path, method: :get, class: "form-inline", as: :search do |form| %>
-
-      <%= form.select :category_id, [ [ 'All Categories', '0' ] ]+@categories.collect {|p| [ p.name, p.id ] }, { }, {class: "form-control"} %>
-      <%= form.select :order_by, [["Name","name ASC"], ["Most liked","likes_count ASC"]], {  }, { class: "form-control" } %>
+  
+       <div class="col-md-3">
+     
+        <label for="">Category:</label>
+        <%= form.select :category_id, [ [ 'All Categories', '0' ] ]+@categories.collect {|p| [ p.name, p.id ] }, { }, {class: "form-control"} %>
       
-      <%= form.text_field :search_txt, class:"form-control" %>
+      </div>
+      <div class="col-md-3">
+      
+       <label for="">Order by:</label>
+        <%= form.select :order_by, [["Name","name ASC"], ["Most liked","likes_count ASC"]], {  }, { class: "form-control" } %>
+       
+       </div>
+       <div class="col-md-3">
+        <label for="">Search by:</label>
+        <%= form.text_field :search_txt, class:"form-control" %>
+      
+      </div>
+
+      
+      <div class="col-md-12">
+      <br/>
       <input type="submit" class="btn btn-default" value="Search"/>
       <%= link_to products_path do %>
         All products
       <% end  %>
+      </div>
     <% end %>
-
+    
   </div>
 </div>
  <%if @user and @user.has_role? :admin%>

@@ -49,11 +49,18 @@ class ProductsController < ApplicationController
   end
 
   def create
-    product = Product.new(product_params)
-    product.sku = SecureRandom.uuid
-    product.save
-    redirect_to product_path(Product.last), flash: { alert: "New product created: #{product.name}", 
-                                        alert_type: 'success' } and return
+    if params[:product][:stock].to_i > 0 && params[:product][:price].to_i > 0 
+      product = Product.new(product_params)
+      product.sku = SecureRandom.uuid
+      product.status = 1
+      product.save
+      redirect_to product_path(Product.last), flash: { alert: "New product created: #{product.name}", 
+                                          alert_type: 'success' } and return
+    else
+      redirect_to new_product, flash: { alert: "Invalid parameters", 
+                                        alert_type: 'danger' } and return
+    end 
+    
   end
 
   def edit

@@ -1,3 +1,9 @@
 <h1>Edit Product</h1>
 
+<div class="panel panel-primary">
+  <div class="panel-body">
+    <%=link_to "Products list", products_path, class: "btn btn-primary btn-lg"%>
+    <%=link_to "< Show product", product_path(@product), class: "btn btn-info btn-lg"%>
+  </div>
+ </div>
 <%= render partial: 'form', locals: {product: @product} %>
