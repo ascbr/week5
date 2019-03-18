@@ -37,7 +37,6 @@
               <%= label_tag(:quantity, "Amount to buy:") %>
               <%= f.number_field :quantity, in: 1..@product.stock, step: 1, required: 'required' %>
               <%= f.hidden_field :product_id, value: @product.id %> 
-              <%= f.hidden_field :purchase_id, value: @purchase.id %>            
               <%= f.submit "Add to cart", class:"btn btn-success"%>
             </div>
           <% end %>

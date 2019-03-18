@@ -21,20 +21,13 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @id = params[:id]
-    @product = Product.find(@id)
-    if current_user
-      @purchase = Purchase.where(['user_id = ? and state = ?', current_user.id, 'in progress']).first
-    end
-
-    unless @purchase
-      @purchase = Purchase.new
-      @purchase.user = current_user
-      @purchase.state = 'in progress'
-      @purchase.total = 0.0
-      @purchase.purchase_date = Time.now
-      @purchase.save
-
+    if params[:id].present?
+      @product = Product.where(id: params[:id]).first
+      
+      if @product.nil?
+        redirect_to products_path, flash: { alert: "Product not found", 
+          alert_type: 'info' } and return
+      end
     end
   end
 
@@ -59,8 +52,7 @@ class ProductsController < ApplicationController
     else
       redirect_to new_product, flash: { alert: "Invalid parameters", 
                                         alert_type: 'danger' } and return
-    end 
-    
+    end
   end
 
   def edit
