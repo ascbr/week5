@@ -5,3 +5,15 @@
 # below each fixture, per the syntax in the comments below
 #
 
+user_admin:
+    email: admin@example.com
+    roles: admin
+
+user_client:
+    email: client@example.com
+    roles: client
+
+
+
+
+     

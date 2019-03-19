@@ -1,15 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  sku: MyString
+  id: 1
+  name: 'product1'
+  sku: sku1
   stock: 1
   price: 9.99
   category: one
+  status: 1
 
 two:
-  name: MyString
-  sku: MyString
+  id: 2
+  name: 'product2'
+  sku: sku2
   stock: 1
   price: 9.99
   category: two
+  status: 1

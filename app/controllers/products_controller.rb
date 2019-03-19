@@ -76,6 +76,7 @@ class ProductsController < ApplicationController
       product = Product.find(params[:id])
       product.status = 0
       product.save
+      
       redirect_to products_path
     else
       redirect_to products_path, flash: { alert: "Access denied", 

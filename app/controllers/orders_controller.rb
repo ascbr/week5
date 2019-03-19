@@ -5,8 +5,7 @@ class OrdersController < ApplicationController
 
   def create
     @purchase = Purchase.find(session[:kart])
-    puts "---------------->"+@purcahse.inspect
-    puts "---------------->"+session[:kart].inspect
+    
     if params[:order][:quantity].to_i > 0
       if @purchase
         order = Order.find_by(purchase_id: @purchase.id,
@@ -33,6 +32,32 @@ class OrdersController < ApplicationController
 
   def purchase
     
+    @purchase_id = params[:purchase][:purchase_id]
+    @purchase_total = params[:purchase][:total]
+    purchase = Purchase.find(@purchase_id)
+    if purchase.orders.count >0
+    purchase.total = params[:purchase][:total].to_f
+    purchase.state = 'completed'
+    purchase.save
+    orders = purchase.orders
+    
+    orders.each do |o|
+      product = o.product
+      product.stock -= o.quantity
+      product.save
+      
+      
+
+      if product.stock <= 3 && product.likes.size > 0
+        SendNotificationsJob.perform_later(product)
+      end
+
+    end
+    redirect_to products_path, flash: { alert: "Purchase #{@purchase_id} . total: #{@purchase_total}", alert_type: 'warning' } and return
+  else 
+    redirect_to orders_path,  flash: { alert: "No Products added to purchase", alert_type: 'danger' } and return
+  end
+
   end
 
   def purchase_log

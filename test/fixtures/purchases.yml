@@ -3,9 +3,11 @@
 one:
   purchase_date: 2019-03-06 12:31:19
   total: 9.99
-  user: one
+  user: user_client
+  
 
 two:
   purchase_date: 2019-03-06 12:31:19
   total: 9.99
-  user: two
+  user: user_client
+ 
