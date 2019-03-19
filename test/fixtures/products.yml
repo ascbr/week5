@@ -1,7 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  id: 1
   name: 'product1'
   sku: sku1
   stock: 1
@@ -10,7 +9,6 @@ one:
   status: 1
 
 two:
-  id: 2
   name: 'product2'
   sku: sku2
   stock: 1

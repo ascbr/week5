@@ -45,9 +45,6 @@ class OrdersController < ApplicationController
       product = o.product
       product.stock -= o.quantity
       product.save
-      
-      
-
       if product.stock <= 3 && product.likes.size > 0
         SendNotificationsJob.perform_later(product)
       end
