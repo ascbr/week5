@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       get 'purchase_log'
     end
   end
+  
   devise_for :users
   root 'products#index'
 end

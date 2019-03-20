@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 # Class OrderController
 class OrdersController < ApplicationController
-  before_action :check_session_kart, only: [:index, :create]
-  before_action :check_change_user, only: [:index, :create]
+  before_action :check_session_kart, only: %i[index create]
+  before_action :check_change_user, only: %i[index create]
 
   def create
     @purchase = Purchase.find(session[:kart])
@@ -18,19 +20,18 @@ class OrdersController < ApplicationController
         order.save
       end
     end
-    redirect_to orders_path, flash: { alert: "Product Aded #{order.product.name}",
-                                      alert_type: 'info' } and return
+    redirect_to(orders_path, flash: { alert: "Product Aded #{order.product.name}",
+                                      alert_type: 'info' }) && return
   end
 
   def index
     @purchase = Purchase.find(session[:kart])
   end
 
-
   def purchase
     purchase_id = params[:purchase][:purchase_id]
     purchase_total = params[:purchase][:total]
-    purchase = Purchase.find(@purchase_id)
+    purchase = Purchase.find(purchase_id)
     if purchase.orders.count.positive?
       purchase.total = params[:purchase][:total].to_f
       purchase.state = 'completed'
@@ -43,22 +44,20 @@ class OrdersController < ApplicationController
         send_email(product)
       end
 
-      redirect_to products_path, flash: { alert: "Purchase #{purchase_id} . total: #{purchase_total}", alert_type: 'warning' } and return
-    else 
-      redirect_to orders_path, flash: { alert: "No Products added to purchase", alert_type: 'danger' } and return
+      redirect_to(products_path, flash: { alert: "Purchase #{purchase_id} . total: #{purchase_total}", alert_type: 'warning' }) && return
+    else
+      redirect_to(orders_path, flash: { alert: 'No Products added to purchase', alert_type: 'danger' }) && return
     end
   end
 
   def purchase_log
-    if current_user
-      @purchases = Purchase.find_by_user_completed(current_user)
-    end
+    @purchases = Purchase.find_by_user_completed(current_user) if current_user
   end
 
   private
 
   def check_session_kart
-    if !session[:kart].present?
+    unless session[:kart].present?
       delete_nil_orders
       if current_user
         purchase = Purchase.find_by_user_in_progress(current_user)
@@ -72,7 +71,7 @@ class OrdersController < ApplicationController
           session[:kart] = Purchase.last.id
         end
       else
-        
+
         purchase = Purchase.new
         purchase.state = 'in_progress'
         purchase.save
@@ -83,9 +82,9 @@ class OrdersController < ApplicationController
   end
 
   def check_change_user
-    if  session[:first_interaction] != current_user.nil?
+    if session[:first_interaction] != current_user.nil?
       if current_user
-        purchase = Purchase.find_by(user_id: current_user.id, state: 'in_progress')
+        purchase = Purchase.find_by_user_in_progress(current_user)
         if purchase
           purchase_send = Purchase.find(session[:kart])
           add_orders_to_purchase(purchase_send, purchase)
@@ -105,13 +104,9 @@ class OrdersController < ApplicationController
 
   def delete_nil_orders
     karts = Purchase.where(user_id: nil)
-    if !karts.nil?
-      karts.each do |k|
-        k.orders.each do |o|
-          o.destroy
-        end
-        k.destroy
-      end
+    karts&.each do |k|
+      k.orders.each(&:destroy)
+      k.destroy
     end
   end
 
@@ -124,7 +119,7 @@ class OrdersController < ApplicationController
   end
 
   def send_email(product)
-    if product.stock <= 3 && product.likes.size > 0
+    if product.stock <= 3 && product.likes.size.positive?
       SendNotificationsJob.perform_later(product)
     end
   end
@@ -132,5 +127,4 @@ class OrdersController < ApplicationController
   def order_params
     params.require(:order).permit(:product_id, :quantity)
   end
-
 end
