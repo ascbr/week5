@@ -4,6 +4,7 @@ require 'securerandom'
 class ProductsController < ApplicationController
 
   before_action :all_categories, only: %i[index new edit]
+  before_action :check_admin, except: %i[index show]
 
 
   def index
@@ -30,29 +31,24 @@ class ProductsController < ApplicationController
 
       if @product.nil?
         redirect_to products_path, flash: { alert: "Product not found", 
-          alert_type: 'info' } and return
+                                            alert_type: 'info' } and return
       end
     end
   end
 
   def new
-    if current_user && current_user.has_role?(:admin)
-      @product = Product.new
-      
-    else 
-      redirect_to products_path, flash: { alert: "Access denied", 
-                                        alert_type: 'info' } and return
-    end
+    @product = Product.new
   end
 
   def create
-    if params[:product][:stock].to_i > 0 && params[:product][:price].to_i > 0 
+    if params[:product][:stock].to_i.positive && params[:product][:price].to_i.positive
+      
       product = Product.new(product_params)
       product.sku = SecureRandom.uuid
       product.status = 1
       product.save
       redirect_to product_path(Product.last), flash: { alert: "New product created: #{product.name}", 
-                                          alert_type: 'success' } and return
+                                                       alert_type: 'success' } and return
     else
       redirect_to new_product, flash: { alert: "Invalid parameters", 
                                         alert_type: 'danger' } and return
@@ -60,13 +56,8 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    if current_user && current_user.has_role?(:admin)
       @product = Product.find(params[:id])
-      
-    else 
-      redirect_to products_path, flash: { alert: "Access denied", 
-                                        alert_type: 'info' } and return
-    end
+  
   end
 
   def update
@@ -76,20 +67,23 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    if current_user && current_user.has_role?(:admin)
-      product = Product.find(params[:id])
-      product.status = 0
-      product.save
-      
-      redirect_to products_path
-    else
-      redirect_to products_path, flash: { alert: "Access denied", 
-                                        alert_type: 'info' } and return
-    end
+    product = Product.find(params[:id])
+    product.status = 0
+    product.save
+
+    redirect_to products_path, flash: { alert: "Product out of list", 
+      alert_type: 'info' } and return
 
   end
 
   private
+
+  def check_admin
+    unless current_user && current_user.has_role?(:admin)
+      redirect_to products_path, flash: { alert: "Access denied", 
+        alert_type: 'info' } and return
+      end
+    end
 
   def all_categories
     @categories = Category.all.order_by_name

@@ -11,11 +11,7 @@ Rails.application.routes.draw do
   #MVC 
   resources :likes
 
-  resources :products do
-    collection do
-      post 'search'
-    end
-  end
+  resources :products 
 
   resources :orders do
     collection do

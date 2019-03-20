@@ -84,7 +84,7 @@ class OrdersController < ApplicationController
   def check_change_user
     if session[:first_interaction] != current_user.nil?
       if current_user
-        purchase = Purchase.find_by_user_in_progress(current_user)
+        purchase = Purchase.find_by_user_in_progress(current_user).first
         if purchase
           purchase_send = Purchase.find(session[:kart])
           add_orders_to_purchase(purchase_send, purchase)
