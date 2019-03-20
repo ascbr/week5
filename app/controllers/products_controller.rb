@@ -2,6 +2,10 @@ require 'securerandom'
 
 # frozen_string_literal: true
 class ProductsController < ApplicationController
+
+  before_action :all_categories, only: %i[index new edit]
+
+
   def index
     @search = OpenStruct.new(
       params.fetch(:search, {})
@@ -9,11 +13,11 @@ class ProductsController < ApplicationController
 
     @user = current_user
     @like = Like.new
-    @categories = Category.all.order_by_name
+    
     if params[:search].present?
-      @list = Product.find_by_status1.order_by(params[:search][:order_by])
+      @list = Product.with_attached_image.find_by_status1.order_by(params[:search][:order_by])
     else
-      @list = Product.find_by_status1.order_by_name
+      @list = Product.with_attached_image.find_by_status1.order_by_name
     end
     @list = @list.find_by_name("%#{params[:search][:search_txt]}%") if params[:search].present?
     @list = @list.find_by_category_id(params[:search][:category_id]) if params[:search].present? and params[:search][:category_id] != '0'
@@ -34,7 +38,7 @@ class ProductsController < ApplicationController
   def new
     if current_user && current_user.has_role?(:admin)
       @product = Product.new
-      @categories = Category.all.order_by_name
+      
     else 
       redirect_to products_path, flash: { alert: "Access denied", 
                                         alert_type: 'info' } and return
@@ -58,7 +62,7 @@ class ProductsController < ApplicationController
   def edit
     if current_user && current_user.has_role?(:admin)
       @product = Product.find(params[:id])
-      @categories = Category.all.order_by_name
+      
     else 
       redirect_to products_path, flash: { alert: "Access denied", 
                                         alert_type: 'info' } and return
@@ -86,6 +90,11 @@ class ProductsController < ApplicationController
   end
 
   private
+
+  def all_categories
+    @categories = Category.all.order_by_name
+  end
+
   def product_params
     params.require(:product).permit(:name, :stock, :price, :category_id, :image)
   end

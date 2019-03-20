@@ -21,6 +21,7 @@ class Product < ApplicationRecord
   scope :find_by_status1, -> { where(status: 1) }
   scope :find_by_name, ->(name) { where(name: name) }
   scope :find_by_category_id, ->(category_id) { where(name: category_id) }
+  
   def thumb
     image.variant(resize: '220x220!')
   end
