@@ -51,7 +51,7 @@ class OrdersController < ApplicationController
 
   def purchase_log
     if current_user
-      @purchases = Purchase.find_by_current_user_completed
+      @purchases = Purchase.find_by_user_completed(current_user)
     end
   end
 
@@ -61,7 +61,7 @@ class OrdersController < ApplicationController
     if !session[:kart].present?
       delete_nil_orders
       if current_user
-        purchase = Purchase.find(user_id: current_user, state: 'in_progress')
+        purchase = Purchase.find_by_user_in_progress(current_user)
         if purchase
           session[:kart] = purchase_id
         else

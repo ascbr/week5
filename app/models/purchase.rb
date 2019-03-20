@@ -3,5 +3,6 @@ class Purchase < ApplicationRecord
   has_many :orders
   has_many :products, through: :orders
 
-  scope :find_by_current_user_completed, -> { where(user_id: current_user.id, state: 'completed') } 
+  scope :find_by_user_completed, ->(user) { where(user_id: user.id, state: 'completed') }
+  scope :find_by_user_in_progress, ->(user) { where(user_id: user.id, state: 'in_progress') } 
 end
