@@ -5,11 +5,10 @@ class OrdersController < ApplicationController
 
   def create
     @purchase = Purchase.find(session[:kart])
-    
-    if params[:order][:quantity].to_i > 0
+    if params[:order][:quantity].to_i.positive?
       if @purchase
         order = Order.find_by(purchase_id: @purchase.id,
-                                         product_id: params[:order][:product_id])
+                              product_id: params[:order][:product_id])
         if order
           order.quantity += params[:order][:quantity].to_i
         else
@@ -19,48 +18,40 @@ class OrdersController < ApplicationController
         order.save
       end
     end
-
     redirect_to orders_path, flash: { alert: "Product Aded #{order.product.name}",
-      alert_type: 'info' } and return
+                                      alert_type: 'info' } and return
   end
-  
+
   def index
     @purchase = Purchase.find(session[:kart])
-  
   end
 
 
   def purchase
-    
-    @purchase_id = params[:purchase][:purchase_id]
-    @purchase_total = params[:purchase][:total]
+    purchase_id = params[:purchase][:purchase_id]
+    purchase_total = params[:purchase][:total]
     purchase = Purchase.find(@purchase_id)
-    if purchase.orders.count >0
-    purchase.total = params[:purchase][:total].to_f
-    purchase.state = 'completed'
-    purchase.save
-    orders = purchase.orders
-    
-    orders.each do |o|
-      product = o.product
-      product.stock -= o.quantity
-      product.save
-      if product.stock <= 3 && product.likes.size > 0
-        SendNotificationsJob.perform_later(product)
+    if purchase.orders.count.positive?
+      purchase.total = params[:purchase][:total].to_f
+      purchase.state = 'completed'
+      purchase.save
+      orders = purchase.orders
+      orders.each do |o|
+        product = o.product
+        product.stock -= o.quantity
+        product.save
+        send_email(product)
       end
 
+      redirect_to products_path, flash: { alert: "Purchase #{purchase_id} . total: #{purchase_total}", alert_type: 'warning' } and return
+    else 
+      redirect_to orders_path, flash: { alert: "No Products added to purchase", alert_type: 'danger' } and return
     end
-    redirect_to products_path, flash: { alert: "Purchase #{@purchase_id} . total: #{@purchase_total}", alert_type: 'warning' } and return
-  else 
-    redirect_to orders_path,  flash: { alert: "No Products added to purchase", alert_type: 'danger' } and return
-  end
-
   end
 
   def purchase_log
     if current_user
-      @purchases = Purchase.where(['user_id = ? and state = ?', 
-        current_user.id, 'completed'])
+      @purchases = Purchase.find_by_current_user_completed
     end
   end
 
@@ -130,6 +121,12 @@ class OrdersController < ApplicationController
       o.save
     end
     purchase_send.destroy
+  end
+
+  def send_email(product)
+    if product.stock <= 3 && product.likes.size > 0
+      SendNotificationsJob.perform_later(product)
+    end
   end
 
   def order_params
