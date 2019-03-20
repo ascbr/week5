@@ -9,21 +9,21 @@ class ProductsController < ApplicationController
 
     @user = current_user
     @like = Like.new
-    @categories = Category.all.order(name: :ASC)
+    @categories = Category.all.order_by_name
     if params[:search].present?
-      @list = Product.where(status: 1).order(params[:search][:order_by])
+      @list = Product.find_by_status1.order_by(params[:search][:order_by])
     else
-      @list = Product.where(status: 1).order(name: :ASC)
+      @list = Product.find_by_status1.order_by_name
     end
-    @list = @list.where('name ILIKE ?', "%#{params[:search][:search_txt]}%") if params[:search].present?
-    @list = @list.where('category_id = ?', params[:search][:category_id]) if params[:search].present? and params[:search][:category_id] != '0'
+    @list = @list.find_by_name("%#{params[:search][:search_txt]}%") if params[:search].present?
+    @list = @list.find_by_category_id(params[:search][:category_id]) if params[:search].present? and params[:search][:category_id] != '0'
     @pagy, @products_list = pagy(@list, items: 8)
   end
 
   def show
     if params[:id].present?
-      @product = Product.where(id: params[:id]).first
-      
+      @product = Product.find_by(id: params[:id])
+
       if @product.nil?
         redirect_to products_path, flash: { alert: "Product not found", 
           alert_type: 'info' } and return
@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
   def new
     if current_user && current_user.has_role?(:admin)
       @product = Product.new
-      @categories = Category.all.order(:name)
+      @categories = Category.all.order_by_name
     else 
       redirect_to products_path, flash: { alert: "Access denied", 
                                         alert_type: 'info' } and return
@@ -58,7 +58,7 @@ class ProductsController < ApplicationController
   def edit
     if current_user && current_user.has_role?(:admin)
       @product = Product.find(params[:id])
-      @categories = Category.all.order(:name)
+      @categories = Category.all.order_by_name
     else 
       redirect_to products_path, flash: { alert: "Access denied", 
                                         alert_type: 'info' } and return
