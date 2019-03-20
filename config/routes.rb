@@ -11,15 +11,15 @@ Rails.application.routes.draw do
   #MVC 
   resources :likes
 
-  resources :products 
+  resources :products
 
-  resources :orders do
+  resources :orders
+
+  resources :purchases do
     collection do
-      post 'purchase'
       get 'purchase_log'
     end
   end
-  
   devise_for :users
   root 'products#index'
 end
