@@ -18,6 +18,15 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     @purchase = purchases(:one)
 
     post '/orders/purchase', params: { purchase: {purchase_id: @purchase.id, total: 100}  }
-    assert_redirect_to products_url
+    assert_redirected_to products_url
   end
+
+  test 'purchase redirect orders' do
+    @purchase = purchases(:two)
+
+    post '/orders/purchase', params: { purchase: {purchase_id: @purchase.id, total: 100}  }
+    assert_redirected_to orders_url
+  end
+
+  
 end
