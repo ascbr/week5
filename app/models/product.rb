@@ -15,6 +15,7 @@ class Product < ApplicationRecord
                                     greater_than_or_equal_to: 0 }
 
   has_one_attached :image
+  has_many :comments, as: :commentable
 
   scope :order_by_name, -> { order(name: :ASC) }
   scope :order_by, ->(criteria) { order(criteria) }

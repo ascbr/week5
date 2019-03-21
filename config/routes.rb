@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  get 'comments/index'
+  get 'comments/new'
   #REST API
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
@@ -11,7 +13,11 @@ Rails.application.routes.draw do
   #MVC 
   resources :likes
 
-  resources :products
+  resources :products do
+    resources :comments
+  end
+
+  
 
   resources :orders
 
@@ -21,5 +27,9 @@ Rails.application.routes.draw do
     end
   end
   devise_for :users
+  resources :users do
+    resources :comments
+  end
+
   root 'products#index'
 end

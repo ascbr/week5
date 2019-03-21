@@ -87,6 +87,7 @@
              <div id="likes-div">
               <%= render partial: 'likes', locals: {product: p} %>
              </div>
+             <div>Comments: <%=p.comments.size%></div>
              <%if @user and @user.has_role? :admin%>
               <hr>
                <%=link_to "Edit", edit_product_path(p.id), class: "btn btn-success btn-lg"%>

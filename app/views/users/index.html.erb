@@ -1,0 +1,22 @@
+<h1>User List</h1>
+
+<div class="panel panel-primary">
+  <table class="table">
+    <%@users.each do |u|%>
+      <tr>
+        <td>
+          <h3>
+            <%=u.username%><br/>
+            <small>
+              <%=u.email%><br/>
+              Comments: <%=u.comments.size%>
+            </small>
+          </h3>
+        </td>
+        <td>
+          <a href="" class="btn btn-success btn-lg">Review/Add Comments</a>
+        </td>
+      </tr>
+    <%end%>
+  </table>
+</div>
