@@ -33,7 +33,6 @@ class ProductsController < ApplicationController
         redirect_to products_path, flash: { alert: "Product not found", 
                                             alert_type: 'info' } and return
       end
-      
       @commentable = @product
       @comments = @commentable.comments
       @comment = Comment.new

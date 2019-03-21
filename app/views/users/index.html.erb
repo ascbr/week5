@@ -1,4 +1,12 @@
 <h1>User List</h1>
+ 
+<%if current_user and current_user.admin?%>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <%= link_to 'Aprove user comments', pending_comments_users_path, class: "btn btn-primary btn-lg" %>
+    </div>
+</div>
+<%end%>
 
 <div class="panel panel-primary">
   <table class="table">
@@ -9,12 +17,13 @@
             <%=u.username%><br/>
             <small>
               <%=u.email%><br/>
-              Comments: <%=u.comments.size%>
+             
             </small>
           </h3>
         </td>
         <td>
-          <a href="" class="btn btn-success btn-lg">Review/Add Comments</a>
+          
+          <%= link_to ' Review/Add Comments', user_path(u), class: "btn btn-success btn-lg" %>
         </td>
       </tr>
     <%end%>

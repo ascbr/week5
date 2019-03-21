@@ -64,11 +64,11 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :user_name => '31079c5ca1a606',
-    :password => '4f248cc7b2705e',
-    :address => 'smtp.mailtrap.io',
-    :domain => 'smtp.mailtrap.io',
-    :port => '2525',
-    :authentication => :cram_md5
+    :user_name => EVN["SENGRID_USER_NAME"],
+    :password => EVN["SENGRID_PASSWORD"],
+    :address => 'smtp.sendgrid.net',
+    :domain => 'localhost:3000',
+    :port => '587',
+    enable_starttls_auto: true
   }
 end

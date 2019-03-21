@@ -1,0 +1,37 @@
+<div class="panel panel-div">
+  <div class="panel-body">
+    <h1>Pending aproval user comments.</h1>
+  </div>
+  <div class="panel-body">
+    <%if @comments_pending%>
+      <table class="table table-hover table-striped table-bordered">
+        <%@comments_pending.each do |c|%>
+        <tr>
+          <td>
+            <h4>
+              <%=c.content%>
+              <small><br/>
+                From: <%=c.user.username%>,
+                To: <%=c.commentable.username%><br/>
+                <%=c.created_at.getlocal.strftime("%m/%d/%Y at %I:%M %p")%>
+
+              </small>
+            </h4>
+          </td>
+          <td>
+             <%= form_with url: comment_aproved_users_path, method: "post", class: "form-inline", local: true do |form| %>
+                
+                <%= form.hidden_field :comment_id, value: c.id %> 
+                <% if user_signed_in? %>
+                  <button type="submit" class="btn btn-success btn-lg" ><i class="fas fa-check-square"></i> Aprove</button>
+                <% end %>    
+              <% end %> 
+
+
+          </td>
+        </tr>
+        <%end%>
+      </table>
+    <%end%>    
+  </div>
+</div>

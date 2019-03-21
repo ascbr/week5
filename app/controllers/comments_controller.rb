@@ -10,11 +10,20 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = @commentable.comments.new(allowed_params_product)
-    if @comment.save
-      redirect_to product_path(@commentable.id)
+    if(@commentable.class == Product)
+      @comment = @commentable.comments.new(allowed_params_product)
+      if @comment.save
+        redirect_to product_path(@commentable.id)
+      else
+        redirect_to products_path
+      end
     else
-      redirect_to products_path
+      @comment = @commentable.comments.new(allowed_params_user)
+      if @comment.save
+        redirect_to user_path(@commentable.id)
+      else
+        redirect_to users_path
+      end
     end
   end
 

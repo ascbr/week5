@@ -33,7 +33,7 @@ class PurchasesController < ApplicationController
 
   def purchase_log
     @purchases = Purchase.find_by_user_completed(current_user) if current_user
-    puts "--------------------------------->"+@purchase.inspect
+    
   end
     
   private

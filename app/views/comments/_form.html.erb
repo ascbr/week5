@@ -11,9 +11,12 @@
   <% end %>
 
   <div class="field">
-    <%= f.text_area :content, rows: 8, class: "form-control" %>
+    <%= f.text_area :content, rows: 8, class: "form-control", 
+      placeholder: "Enter your comment...",
+      required: true 
+    %>
   </div>
-  <div class="actions">
-    <%= f.submit 'Add new Comment', class: "btn btn-default btn-lg"%>
+  <div class="actions"><br/>
+    <%= f.submit 'Add new Comment', class: "btn btn-default btn-lg control-form"%>
   </div>
 <% end %>

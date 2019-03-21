@@ -29,6 +29,10 @@ Rails.application.routes.draw do
   devise_for :users
   resources :users do
     resources :comments
+    collection do
+      get 'pending_comments'
+      post 'comment_aproved'
+    end
   end
 
   root 'products#index'
