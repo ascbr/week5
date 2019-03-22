@@ -1,13 +1,13 @@
-# WEEK6
+# WEEK7
 
-Snack Store week6
+Snack Store week7
 
-- Added Active Storage for product image.
-- Added Admin autorization. 
-- Added Product CRUD for admin users.
-- Endpoint for Product list and name search.
-- Endpoint for user authentication.
-- Active Job, for email notification to last user who liked a product, and stock drops to 3 or less.
+
+* Refactor all antipatterns. 
+* Added SengGrid to send email. 
+* Added Snacks Review.
+* Added Users Reviews.
+* Deployed your app to Heroku.
 
 
 
