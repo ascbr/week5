@@ -3,6 +3,9 @@
 # Class OrderController
 class OrdersController < ApplicationController
   
+  include CartInitAndCheck
+  before_action :check_session_kart, only: %i[create]
+  before_action :check_change_user, only: %i[create]
 
   def create
     @purchase = Purchase.find(session[:kart])

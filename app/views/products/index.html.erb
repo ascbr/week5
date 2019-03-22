@@ -69,7 +69,7 @@
             <h3>
               <%= p.name %>
              <br/><div class="small text-muted">SKU: <%= p.sku%>
-             <br>Category: <%= p.category.name %></div>
+             <br>Category: <%= p.category.try(:name) %></div>
             </h3>
             <h2>
               $ <%= p.price.round(2) %>
