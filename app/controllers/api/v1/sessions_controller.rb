@@ -4,6 +4,7 @@ module API
       skip_before_action :verify_authenticity_token
       respond_to :json
       KEY = Rails.application.secrets.secret_key_base.to_s
+
       def create
         @user = User.find_by(email: params[:email])
         if @user.nil?
@@ -14,7 +15,7 @@ module API
               KEY,
               'HS256'
             )
-            request.headers[:token] = jwt
+            headers[:token] = jwt
             render json: { status: 'OK', message: 'Valid credenttials', data: jwt }, status: :ok
         else
             render json: {message: 'invalid credentials'}, status: :unathorized
@@ -22,7 +23,7 @@ module API
       end
 
       def index
-        puts KEY
+        
         data = request.headers[:token]
         begin
           decoded_token = JWT.decode data, KEY, true, { algorithm: 'HS256'}

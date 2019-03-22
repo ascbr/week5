@@ -4,6 +4,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   has_many :likes
   has_many :products, through: :likes
+  has_many :comments, as: :commentable
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -15,6 +16,6 @@ class User < ApplicationRecord
   
   def client?
     has_role?(:client)
-  end 
+  end
 
 end

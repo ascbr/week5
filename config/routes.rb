@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  get 'comments/index'
+  get 'comments/new'
   #REST API
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
@@ -12,17 +14,26 @@ Rails.application.routes.draw do
   resources :likes
 
   resources :products do
-    collection do
-      post 'search'
-    end
+    resources :comments
   end
 
-  resources :orders do
+  
+
+  resources :orders
+
+  resources :purchases do
     collection do
-      post 'purchase'
       get 'purchase_log'
     end
   end
   devise_for :users
+  resources :users do
+    resources :comments
+    collection do
+      get 'pending_comments'
+      post 'comment_aproved'
+    end
+  end
+
   root 'products#index'
 end

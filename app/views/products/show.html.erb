@@ -31,23 +31,52 @@
         </div>
         <div class="col-md-6">
           <h3>Products available: <%=@product.stock%></h3>
-          <%if !current_user or !current_user.has_role?(:admin)%>
+          
           <%= form_for(Order.new) do |f| %>
             <div class="form-group">
               <%= label_tag(:quantity, "Amount to buy:") %>
               <%= f.number_field :quantity, in: 1..@product.stock, step: 1, required: 'required' %>
               <%= f.hidden_field :product_id, value: @product.id %> 
-              <%= f.hidden_field :purchase_id, value: @purchase.id %>            
               <%= f.submit "Add to cart", class:"btn btn-success"%>
             </div>
           <% end %>
-          <%end%>
+          
           <%if current_user and current_user.has_role?(:admin)%>
           <hr>
           <%=link_to "Edit", edit_product_path(@product.id), class: "btn btn-success btn-lg"%>
           <%=link_to "Remove", product_path(@product.id), method: :delete, class: "btn btn-danger btn-lg", data: {confirm: "Do you want to remove the product?"}  %>
           <%end%>
         </div>
+        
       </div>
     </div>
 </div>
+<br/>
+<div class="panel panel-primary">
+  <div class="panel-body">
+    <h1>Comments:</h1>
+    <div class="panel panel-default">
+      <table class="table table-hover table-striped">
+
+        <%@comments. each do |c|%>
+        <tr>
+          <td>
+           <small class="text-muted">
+              <strong><%=c.user.username%>:</strong><br/>
+              <%=c.created_at.getlocal.strftime("%m/%d/%Y at %I:%M %p")%>
+           </small><br/>
+            <%=c.content%><br/>
+            
+          </td>  
+        </tr>  
+        <%end%>
+      </table>
+    </div>
+    <% if current_user%>
+      <h1>New Comment</h1>
+
+      <%= render 'comments/form' %>
+    <%end%>
+  </div>  
+</div>
+

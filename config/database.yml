@@ -61,6 +61,10 @@ development:
 test:
   <<: *default
   database: store_test
+  username: store
+  password: store
+  host: localhost
+  
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -85,4 +89,4 @@ production:
   <<: *default
   database: store_production
   username: store
-  password: <%= ENV['STORE_DATABASE_PASSWORD'] %>
+  password: store

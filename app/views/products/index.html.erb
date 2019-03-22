@@ -69,7 +69,7 @@
             <h3>
               <%= p.name %>
              <br/><div class="small text-muted">SKU: <%= p.sku%>
-             <br>Category: <%= p.category.name %></div>
+             <br>Category: <%= p.category.try(:name) %></div>
             </h3>
             <h2>
               $ <%= p.price.round(2) %>
@@ -87,6 +87,7 @@
              <div id="likes-div">
               <%= render partial: 'likes', locals: {product: p} %>
              </div>
+             <div>Comments: <%=p.comments.size%></div>
              <%if @user and @user.has_role? :admin%>
               <hr>
                <%=link_to "Edit", edit_product_path(p.id), class: "btn btn-success btn-lg"%>

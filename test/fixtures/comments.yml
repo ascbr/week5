@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  quantity: 1
-  purchase: one
-  product: one
+  content: MyText
+  user_id: one
+  state: 1
 
 two:
-  quantity: 2
-  purchase: one
-  product: two
+  content: MyText
+  user_id: two
+  state: 1

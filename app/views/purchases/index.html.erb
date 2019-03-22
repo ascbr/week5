@@ -7,13 +7,18 @@
   <button type="button" class="close" data-dismiss="alert">&times;</button>
 </div>
 <% end %>
+ <li><%= link_to "My Purchase log", purchase_log_purchases_path %></li>
+
 <div class="panel panel-default">
     
     <div class="panel-body">
     <% if @purchase %>
       <h4>
-        Purchase id: <%=@purchase.id%><br/>
-        User: <%=@user.username%>
+        <%if current_user%>
+        User: <%=current_user.username%>
+        <%else%>
+        User: Anonymous
+        <%end%>
       <h4>
       <table class="table table-bordered">
         <thead>
@@ -25,15 +30,14 @@
           </tr>
         </thead>
         <% sum_total = 0%>
-        <%@orders.each do |o| %>
+        <%@purchase.orders.each do |o| %>
             <tr>
                 <td>
                    <h3>
                      <%= o.product.name %>          
                    </h3>
                    <div class='text-muted'> 
-                      Category: <%= o.product.category.name %> <br/>
-                      SKU: <%= o.product.sku %> 
+                      
                        
                    </div>
                 </td>
@@ -49,21 +53,31 @@
                 </td>
             </tr>
         <% end %>
+        <%if @purchase.nil?%>
+          <div class="alert alert-info" role="alert">
+            No products adedd to the Kart.
+          </div>
+        <%end%>
+
       </table>
       <div class='panel panel-danger'>
         <div class='text-right panel-body'>
            <h1> Total: $ <%=sum_total.round(2)%></h1>
         <div>
         <div>
-          <%= form_for @purchase, url: purchase_orders_path,  method: :post do |f| %>
-            <%= f.hidden_field :purchase_id, value: @purchase.id %>  
-            <%= f.hidden_field :total, value: sum_total %>
-            <% if user_signed_in? %>   
+          <% if user_signed_in? %>  
+            <%= form_for @purchase, method: :patch do |f| %>
+              <%= f.hidden_field :total, value: sum_total %>
               <%= f.submit "Purchase", class:"btn btn-success btn-lg"%>
+            
             <%end%>
+          <%else%>
+            <%=link_to "Login to Purchase", new_user_session_path, {class: "btn btn-primary btn-lg"}%>
           <%end%>
             
         </div>
+
+     
       </div>
       <%else%>
         

@@ -32,7 +32,7 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.perform_deliveries = true
 
@@ -64,11 +64,11 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :user_name => '31079c5ca1a606',
-    :password => '4f248cc7b2705e',
-    :address => 'smtp.mailtrap.io',
-    :domain => 'smtp.mailtrap.io',
-    :port => '2525',
-    :authentication => :cram_md5
+    user_name: ENV["SENGRID_USER_NAME"],
+    password: ENV["SENGRID_PASSWORD"],
+    address: 'smtp.sendgrid.net',
+    domain: 'localhost:3000',
+    port: '587',
+    enable_starttls_auto: true
   }
 end

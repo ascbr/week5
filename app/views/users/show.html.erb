@@ -1,0 +1,40 @@
+<div class="panel panel-body">
+  <div class="panel-body">
+    <h1>User: <%=@user.username%><br/>
+      <small>
+        <%=@user.email%><br/>
+        <%@user.roles.each do |r|%>
+        Type: <%=r.name%>
+        <%end%>
+      </small>  
+    </h1>
+  </div>
+</div>
+
+<div class="panel panel-body">
+  <div class="panel-body">
+    <h1>Comments:</h1>
+    <div class="panel panel-default">
+      <table class="table table-hover table-striped">
+
+        <%@comments. each do |c|%>
+        <tr>
+          <td>
+           <small class="text-muted">
+              <strong><%=c.user.username%>:</strong><br/>
+              <%=c.created_at.getlocal.strftime("%m/%d/%Y at %I:%M %p")%>
+           </small><br/>
+            <%=c.content%><br/>
+            
+          </td>  
+        </tr>  
+        <%end%>
+      </table>
+    </div>
+    <% if current_user%>
+      <h1>New Comment</h1>
+
+      <%= render 'comments/form' %>
+    <%end%>  
+  </div>
+</div>
